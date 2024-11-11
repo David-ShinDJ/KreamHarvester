@@ -1,4 +1,4 @@
-## Kream 자동화 프로그램
+# Kream 자동화 프로그램
 ### 개요
 이 프로젝트는 Python과 SeleniumBase를 사용하여 Kream 웹사이트에서 원하는 상품 정보를 자동으로 수집하고 엑셀 파일로 저장하는 웹 크롤링 프로그램입니다.
 
@@ -11,9 +11,7 @@ headless 모드: 백그라운드에서 실행하여 브라우저 창을 띄우�
 ##### 사용 방법
 환경 설정:
 Python 3.7 이상 설치
-requirements.txt 파일의 라이브러리 설치 (pip install -r requirements.txt)
 ChromeDriver 설치 및 경로 설정
-config.py 파일에서 Kream 계정 정보 (이메일, 비밀번호) 설정
 
 ###### 실행:
 main.py 파일 실행
@@ -21,17 +19,16 @@ main.py 파일 실행
 크롤링 완료 후 products.xlsx 파일 확인
 ###### 코드 구조
 main.py: 프로그램 실행 및 제어
-login.py: Kream 로그인 기능
-crawler.py: 상품 정보 크롤링 및 데이터 처리
-utils.py: 유틸리티 함수
-config.py: 설정 값 저장
-라이브러리
-SeleniumBase: 웹 테스트 자동화 및 웹 스크래핑
-parameterized: 테스트 함수에 여러 인자 전달
-logging: 프로그램 실행 로그 기록
-주의 사항
+Core - 실제코드기능구현 
+Utils - 서브기능 ex) bs4 html 작성 
+Pages - Kream HTMl 소스코드
+Test - 테스트코드 BaseCase 작성
+###### 라이브러리
+SeleniumBase: 웹 테스트 자동화 및 웹 스크래핑 핵심기능담당
+Selenium: 크롬드라이버 기능설정
+bs4: 페이지 소스코드 크롤링
+###### 주의 사항
 Kream 웹사이트 robots.txt 준수
-과도한 크롤링 자제
 Kream 웹사이트 구조 변경 시 코드 수정 필요
-기여
+### 기여
 이슈 제기 및 pull request 환영

@@ -1,17 +1,11 @@
-import requests
-from bs4 import BeautifulSoup
+from core import *
+from utils import *
 
-url = "https://kream.co.kr/"
-response = requests.get(url)
-html = response.text
-soup = BeautifulSoup(html, "html.parser")
+# test = login.Login(email="ehdwnsqkqhek@naver.com", password="Tls1169511!")
+# test.perform_login()
 
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(soup.prettify())
 
-print(response)
-print("-------")
-print(html)
-print("-------")
-print(soup)
-print("-------")
+html_gen = bs4_html.SoupHtmlGenerator(url="https://kream.co.kr/search", page_name="search")
+html_gen.make_html()
+
+
