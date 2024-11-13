@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-class SoupHtmlGenerator:
+class SoupManager:
     ## URL 넣으면 해당 페이지 index.html 생성
     def __init__(self, url, page_name):
         self.url = url

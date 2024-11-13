@@ -1,6 +1,4 @@
 import random
-import time
-
 ## TODO: Filter 항목에따른 매칭 연결시키기 카테고리:레고/ 사이즈항목 존재 x
 from parameterized import parameterized
 from seleniumbase import BaseCase
@@ -42,7 +40,7 @@ class Filter(BaseCase):
             else:
                 pass
             self.click('a.btn.full.solid')
-            pause_sb.pause()
+            pause.pause_while()
             # self.click('li.menu span:contains("%s")' % test_category)
             # self.click('li.menu span:contains("%s")' % test_category_detail)
             # self.click('div.title_box span:contains("%s")' % test_basic_filter)
