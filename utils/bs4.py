@@ -21,3 +21,7 @@ class SoupManager:
             f.close()
         print(f"{self.page_name} Page 생성완료")
 
+# pages : html 생성
+if __name__ == "__main__":
+    html_generator = SoupManager(url="https://kream.co.kr/search", page_name="search")
+    html_generator.make_html()

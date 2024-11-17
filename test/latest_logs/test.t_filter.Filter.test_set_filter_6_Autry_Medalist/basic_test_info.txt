@@ -1,0 +1,14 @@
+t_filter.py::Filter::test_set_filter_6_Autry_Medalist
+--------------------------------------------------------------------
+Last Page: data:,
+ Duration: 0.08s
+  Browser: Chrome 131.0.6778.70
+   Driver: chromedriver 131.0.6778.69
+Timestamp: 1731783880  (Unix Timestamp)
+     Date: Sunday, 17 November 2024
+     Time: 4:04:40 AM  (KST, UTC+09:00)
+--------------------------------------------------------------------
+Traceback:
+  File "/Users/david/Codings/PycharmProjects/KreamHarvester/.venv/lib/python3.13/site-packages/parameterized/parameterized.py", line 620, in standalone_func
+    return func(*(a + p.args), **p.kwargs, **kw)
+Exception: Filter.test_set_filter() missing 2 required positional arguments: 'category_detail' and 'basic_filter2'

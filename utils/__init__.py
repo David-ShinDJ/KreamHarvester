@@ -1,1 +1,1 @@
-__all__ = ['bs4', 'pause', 'sele']
+__all__ = ['bs4', 'pause', 'sele', 'data_manager']
