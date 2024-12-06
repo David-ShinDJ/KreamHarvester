@@ -16,3 +16,5 @@ class TestLogin(BaseCase):
             print("로그인 성공!")
         except Exception as e:
             print(f"로그인 실패: {e}")
+
+

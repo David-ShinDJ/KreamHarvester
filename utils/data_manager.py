@@ -47,10 +47,13 @@ class DataManager:
             data_list = data.splitlines()
             return data_list
 
-    def data_to_dictionary(self, text_file_name: str, slicing_words, case=None):
+    ## category-filter 케이스 경우 모두 선택 제외
+    def data_to_dictionary(self, text_file_name: str, slicing_words, case=None, detail=None):
         if case == "filter":
             data = self._read_data(text_file_name=text_file_name)
             data_list = data.splitlines()
+            if detail == "category":
+                data_list = [category for category in data_list if category != "모두 선택"]
             data_list = data_list[1:]
             data_dictionary: dict[str, list[str]] = {}
             for i, word in enumerate(slicing_words):

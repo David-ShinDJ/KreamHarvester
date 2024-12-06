@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import utils.data_manager as data_manager
 
 class SeleniumManager:
 
@@ -16,7 +15,6 @@ class SeleniumManager:
         self.driver.implicitly_wait(15)
         self.wait = WebDriverWait(self.driver, 10)
         print("드라이버가 성공적으로 시작되었습니다.")
-        self.data_manager = data_manager.DataManager()
 
     def open_url(self, url):
         try:
@@ -112,11 +110,13 @@ class SeleniumManager:
         except Exception as e:
             print(f"{selector} 텍스트 가져오기 실패. 오류: {e}")
             return None
-
-    def save_text(self, selector, by=By.CSS_SELECTOR, filename="text_element.txt"):
+    ## 
+    def get_text_element(self, selector, by=By.CSS_SELECTOR):
         text_element = self.get_text(selector, by)
         if text_element:
-            self.data_manager.element_to_text(text_element, filename)
+            return text_element
+        else:
+            return None
 
     def get_current_url(self):
         """현재 URL을 반환합니다."""
