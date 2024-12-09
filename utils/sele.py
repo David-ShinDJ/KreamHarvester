@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 class SeleniumManager:
 
@@ -110,14 +111,28 @@ class SeleniumManager:
         except Exception as e:
             print(f"{selector} 텍스트 가져오기 실패. 오류: {e}")
             return None
-    ## 
-    def get_text_element(self, selector, by=By.CSS_SELECTOR):
-        text_element = self.get_text(selector, by)
-        if text_element:
-            return text_element
-        else:
-            return None
 
+    def hover_click_element(self, selector, by=By.CSS_SELECTOR):
+        element = self._find_element(selector, by)
+        if not element:
+            element = self.wait_for_element(selector, by)
+        if element:
+            try:
+                actions = ActionChains(self.driver)
+                actions.move_to_element(element).perform()
+                element.click()
+                print(f"{selector}를 클릭했습니다.")
+            except Exception as e:
+                print(f"{selector}를 클릭하지 못했습니다. 오류: {e}")
+        else:
+            print(f"요소를 찾을 수 없습니다: {selector}")
+    def scoll_down(self, selector):
+        element = self._find_element(selector)  
+        if not element:
+            element = self.wait_for_element(selector)
+        if element:
+            element.location_once_scrolled_into_view
+    
     def get_current_url(self):
         """현재 URL을 반환합니다."""
         return self.driver.current_url
