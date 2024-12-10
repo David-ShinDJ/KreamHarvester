@@ -1,5 +1,12 @@
 from utils.data_manager import DataManager
-def select_filter():
+
+def input_login():
+    email = input("이메일을 입력하세요 : ")
+    password = input("비밀번호를 입력하세요 : ")
+    return email, password
+        
+## TODO: 필터 세부 모두 선택 넣기
+def input_filter():
         data_manager = DataManager()
         filters = {
             "category": "",
@@ -9,6 +16,7 @@ def select_filter():
             "benefit": "",
             "benefit_detail": "",
             "brand": "",
+            "brand_detail": "",
             "collection": "",
             "size": "",
             "size_detail": "",
@@ -21,21 +29,24 @@ def select_filter():
         category_detail_options = ", ".join(data_manager.json_to_dictionary('category')[category])
         category_detail = input(f"{category_detail_options} 중 하나를 입력하세요 : ")
         filters["category_detail"] = category_detail
-        gender_options = ", ".join(data_manager.json_to_list('gender'))
+        gender_options = ", ".join(data_manager.json_to_list('gender')["성별"])
         gender = input(f"{gender_options} 중 하나를 입력하세요 : ")
         filters["gender"] = gender
-        color_options = ", ".join(data_manager.json_to_list('color'))
+        color_options = ", ".join(data_manager.json_to_list('color')["색상"])
         color = input(f"{color_options} 중 하나를 입력하세요 : ")
         filters["color"] = color
         benefit_options = ", ".join(data_manager.json_to_dictionary('benefit').keys())
         benefit = input(f"{benefit_options} 중 하나를 입력하세요 : ")
-        filters["benefit"] = benefit
         benefit_detail_options = ", ".join(data_manager.json_to_dictionary('benefit')[benefit])
         benefit_detail = input(f"{benefit_detail_options} 중 하나를 입력하세요 : ")
+        filters["benefit"] = benefit
         filters["benefit_detail"] = benefit_detail
         brand_options = ", ".join(data_manager.json_to_list('brand'))
         brand = input(f"{brand_options} 중 하나를 입력하세요 : ")
         filters["brand"] = brand
+        brand_detail_options = ", ".join(data_manager.json_to_dictionary('brand')[brand])
+        brand_detail = input(f"{brand_detail_options} 중 하나를 입력하세요 : ")
+        filters["brand_detail"] = brand_detail
         collection_options = ", ".join(data_manager.json_to_list('collection'))
         collection = input(f"{collection_options} 중 하나를 입력하세요 : ")
         filters["collection"] = collection

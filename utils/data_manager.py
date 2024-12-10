@@ -71,7 +71,7 @@ class DataManager:
 
     ## category-filter 케이스 경우 모두 선택 제외
     def data_to_dictionary(self, text_file_name: str, slicing_words, case=None, detail=None):
-        if case == "filter":
+        if case == "filter" or case == "brand":
             data = self._read_data(text_file_name=text_file_name)
             data_list = data.splitlines()
             if detail == "category":
@@ -203,7 +203,7 @@ class DataManager:
         benefit_dic = self.data_to_dictionary('benefit', ["혜택", "할인율"], case="benefit")
         self.dictionary_to_json(benefit_dic, 'benefit')
 
-        brand_dic = self.data_to_dictionary('brand', ["브랜드"], case="brand")
+        brand_dic = self.data_to_dictionary('brand', ["&", "0", "1", "2", "4", "6", "7", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], case="brand")
         self.dictionary_to_json(brand_dic, 'brand')
 
         collection_dic= self.data_to_dictionary('collection', ["컬렉션"], case="collection")
@@ -212,7 +212,7 @@ class DataManager:
         size_dic = self.data_to_dictionary('size', ["신발", "의류"], case="size")
         self.dictionary_to_json(size_dic, 'size')
 
-        price_dic = self.data_to_dictionary('price', ["가격"], case="price")
+        price_dic = self.data_to_dictionary('price', ["가격대"], case="price")
         self.dictionary_to_json(price_dic, 'price')
 
 

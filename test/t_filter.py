@@ -21,7 +21,8 @@ test_benefit = random.choice(list(benefit_dictionary.keys()))
 test_benefit_detail = random.choice(benefit_dictionary[test_benefit])
 
 brand_dic = data_manager.json_to_dictionary('brand')
-test_brand = random.choice(brand_dic["브랜드"])
+test_brand = random.choice(list(brand_dic.keys()))
+test_brand_detail = random.choice(brand_dic[test_brand])
 
 collection_dic = data_manager.json_to_dictionary('collection')
 test_collection = random.choice(collection_dic["컬렉션"])
@@ -31,23 +32,26 @@ test_size = random.choice(list(size_dictionary.keys()))
 test_size_detail = random.choice(size_dictionary[test_size])
 
 price_dic = data_manager.json_to_dictionary('price')
-test_price = random.choice(price_dic["가격"])
+test_price = random.choice(price_dic["가격대"])
 
 sorting_list = data_manager.json_to_list('sorting')
 test_sorting = random.choice(sorting_list)
 
-print(test_cate, test_cate_detail, test_gender, test_color, test_benefit, test_benefit_detail, test_brand, test_collection, test_size,  test_size_detail, test_price, test_sorting)
+print(test_cate, test_cate_detail, test_gender, test_color, test_benefit, test_benefit_detail, test_brand, test_brand_detail, test_collection, test_size,  test_size_detail, test_price, test_sorting)
 ## Test Case
 """
-    ("아우터", "패딩", "남성", "블랙", "혜택", "모두 선택", "Nike", "Luxury", "의류", "XL", "30-50만원", "남성 인기순"),
-    ("신발", "스니커즈", "여성", "아이보리", "할인율", "30% 이하", "Tabi", "Contemporary", "신발", "240", "20만원대", "여성 인기순")
+    ("아우터", "패딩", "남성", "블랙", "혜택", "모두 선택", "N", "Nike", "Luxury", "의류", "XL", "30-50만원", "남성 인기순"),
+    ("신발", "스니커즈", "여성", "아이보리", "할인율", "30% 이하", "T", "Tabi", "Contemporary", "신발", "240", "20만원대", "여성 인기순")
 """
         # (test_cate_detail, test_gender, test_color, test_benefit, test_benefit_detail, test_brand, test_collection, test_size, test_size_detail, test_price, test_sorting),
 class Filter(BaseCase):
     @parameterized.expand([
-            ("아우터", "패딩", "남성", "블랙", "혜택", "모두 선택", "Nike", "Luxury", "의류", "XL", "30-50만원", "남성 인기순"),
+            ("아우터", "패딩", "남성", "블랙", "혜택", "모두 선택", "N", "Nike", "Luxury", "의류", "XL", "30-50만원", "남성 인기순"),
+            # ("신발", "스니커즈", "여성", "아이보리", "할인율", "30% 이하", "T", "Tabi", "Contemporary", "신발", "240", "20만원대", "여성 인기순"),
+            # (test_cate, test_cate_detail, test_gender, test_color, test_benefit, test_benefit_detail, test_brand, test_brand_detail, test_collection, test_size,  test_size_detail, test_price, test_sorting)
+
     ])
-    def test_set_filter(self, test_cate: str ,test_category_detail: str, test_gender: str, test_color: str, test_benefit: str, test_benefit_detail: str, test_brand: str, test_collection: str, test_size: str, test_size_detail: str, test_price: str, test_sorting: str):
+    def test_set_filter(self, test_cate: str ,test_category_detail: str, test_gender: str, test_color: str, test_benefit: str, test_benefit_detail: str, test_brand: str, test_brand_detail: str, test_collection: str, test_size: str, test_size_detail: str, test_price: str, test_sorting: str):
         try:
             self.open("https://kream.co.kr/")
             self.click('a:contains("SHOP")')
@@ -55,25 +59,22 @@ class Filter(BaseCase):
             # 필터모달 열기
             self.click('p.text-group span:contains("카테고리")')
             ## 필터리셋시키기
-            self.click('div.shop-filter-sections.category.expanded span.collapse-icon')
             self.click('div.shop-filter-sections.gender.expanded span.collapse-icon')
             self.click('div.shop-filter-sections.benefits.expanded span.collapse-icon')
             ## 카테고리필터키기
-            self.click('div.shop-filter-sections.category span.collapse-icon')
             self.click('div.shop-filter-sections button:contains("더보기")')
-
             ## 카테고리선택 -> 모두 선택 카테고리에서는 없음
+            self.hover('div.shop-filter-sections.category.expanded div.section_titles p:contains("%s")' % test_cate)
             self.click('button.filter_button.tint span:contains("%s")' % test_category_detail)
             self.click('div.shop-filter-sections.category.expanded span.collapse-icon')
-
             self.sleep(1)
-
             ## 성별선택
             if self.is_element_present('div.shop-filter-sections.gender'):
                 self.click('div.shop-filter-sections.gender span.collapse-icon')
                 if self.is_element_visible('p.text-group span:contains("%s")' % test_gender):
                     self.click('p.text-group span:contains("%s")' % test_gender)
                 self.click('div.shop-filter-sections.gender.expanded span.collapse-icon')
+                self.sleep(1)
 
             ## 색상선택
             if self.is_element_present('div.shop-filter-sections.color'):
@@ -81,6 +82,7 @@ class Filter(BaseCase):
                 if self.is_element_visible('div.shop-filter-sections.color p:contains("%s")' % test_color):
                     self.click('div.shop-filter-sections.color p:contains("%s")' % test_color)
                 self.click('div.shop-filter-sections.color.expanded span.collapse-icon')
+                self.sleep(1)
             
             ## 혜택/할인 선택
             if self.is_element_present('div.shop-filter-sections.benefits'):
@@ -91,12 +93,13 @@ class Filter(BaseCase):
                     if self.is_element_visible('div.shop-filter-sections.benefits span:contains("%s")' % test_benefit_detail):
                         self.click('div.shop-filter-sections.benefits span:contains("%s")' % test_benefit_detail)
                 self.click('div.shop-filter-sections.benefits.expanded span.collapse-icon')
+                self.sleep(1)
             ## 브랜드 선택
             if self.is_element_present('div.shop-filter-sections.brand'):
                 self.click('div.shop-filter-sections.brand span.collapse-icon')
-                if self.is_element_visible('div.section_contents span:contains("%s")' % test_brand):
-                    self.hover('div.section_contents span:contains("%s")' % test_brand)
-                    self.click('div.section_contents span:contains("%s")' % test_brand)
+                if self.is_element_visible('div.filter-section-list.brand div.section_titles p.title:contains("%s")' % test_brand):
+                    self.hover('div.section_contents span:contains("%s")' % test_brand_detail)
+                    self.click('div.section_contents span:contains("%s")' % test_brand_detail)
                 else:
                     pass
                 self.click('div.shop-filter-sections.brand.expanded span.collapse-icon')
@@ -106,25 +109,26 @@ class Filter(BaseCase):
             if self.is_element_visible('div.shop-filter-sections.collection'):
                 self.click('div.shop-filter-sections.collection span.collapse-icon')
                 if self.is_element_present('div.section_contents span:contains("%s")' % test_collection):
-                    self.hover_click_element('div.section_contents span:contains("%s")' % test_collection)
+                    self.hover_and_click('div.section_contents span:contains("%s")' % test_collection)
                 else:
                     pass
                 self.click('div.shop-filter-sections.collection.expanded span.collapse-icon')
                 self.sleep(1)
+    
             ## 사이즈 선택  
             if self.is_element_present('div.shop-filter-sections.tag_id\[size\]'):
                 self.click('div.shop-filter-sections.tag_id\[size\] span.collapse-icon')
-                if self.is_element_visible('div.shop-filter-sections.tag_id\[size\] p.contains("%s")' % test_size):
-                    self.click('p.text-group span:contains("%s")' % test_size_detail) 
-                else:
-                    pass
+                if self.is_element_visible('div.filter-section-list.tag_id\[size\] div.section_titles p.title:contains("%s")' % test_size):
+                    self.click('div.section_contents span:contains("%s")' % test_size_detail)
                 self.click('div.shop-filter-sections.tag_id\[size\].expanded span.collapse-icon')  
+                self.sleep(1)
             
             ## 가격대 선택
             if self.is_element_present('div.shop-filter-sections.price'):
                 self.click('div.shop-filter-sections.price span.collapse-icon')
                 self.hover_and_click('div.shop-filter-sections.price div.vue-slider-rail', 'button.filter_button.tint span:contains("%s")' % test_price)
                 self.click('div.shop-filter-sections.price.expanded span.collapse-icon')
+                self.sleep(1)
             ## 필터적용
             self.click('a.btn.full.solid')
 
@@ -134,6 +138,7 @@ class Filter(BaseCase):
             else:
                 self.click('div.content-container button.sorting_title')
                 self.click('li.sorting_item p:contains("%s")' % test_sorting)
+            pause_while()
             
             # 또는 대신 명시적 대기 사용
         except Exception as e:
