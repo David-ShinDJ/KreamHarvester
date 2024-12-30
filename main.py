@@ -57,6 +57,3 @@ with SB() as sb:
 ##data_manager 생성
 ## filter 선택하기 -> 원하는 필터 선택 없는경우 "" 입력 -> ## TODO: 복수필터선택 및 모두선택 기능 추가해야함
 
-
-
-

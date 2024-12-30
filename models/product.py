@@ -7,8 +7,12 @@ class ProductInfo:
         self.rd = rd    # 출시일
         self.rc = rc    # 대표색상
 
+    def __str__(self):
+        return f"ProductInfo(rtp={self.rtp}, rpc={self.rpc}, rp={self.rp}, mn={self.mn}, rd={self.rd}, rc={self.rc})"
+    
+
 class Product:
-    def __init__(self, name:str, url:str, option:str, ipp:int, ssp:int, info:ProductInfo):
+    def __init__(self, name:str, url:str, option:str | None, ipp:int, ssp:int, info:ProductInfo):
         self.name = name
         self.url = url
         self.option = option  # option 변수 할당이 누락되어 있었음
@@ -17,9 +21,7 @@ class Product:
         self.m = self.ssp - self.ipp
         self.mr = format((self.ssp - self.ipp) / self.ssp, ".2f")  # 수식 괄호 수정
         self.info = info
-
+        
     def __str__(self):
         return f"Product(name={self.name}, url={self.url}, option={self.option}, ipp={self.ipp}, ssp={self.ssp}, m={self.m}, mr={self.mr}, info={self.info})"
     
-    def __repr__(self):
-        return f"Product(name={self.name}, url={self.url}, option={self.option}, ipp={self.ipp}, ssp={self.ssp}, m={self.m}, mr={self.mr}, info={self.info})"
