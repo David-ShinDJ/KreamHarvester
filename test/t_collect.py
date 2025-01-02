@@ -5,6 +5,8 @@ from models.product import Product, ProductInfo
 from excels.excel import Excel
 import time, re, os
 
+## 추출한 데이터 다시 정의하기
+
 product_sample = Product(
     name="노스페이스 온 볼 자켓 블랙",
     url="https://kream.co.kr/products/178681?fetchRelated=true",
