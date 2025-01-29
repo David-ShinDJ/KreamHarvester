@@ -26,61 +26,43 @@ class Collect(BaseCase):
         super().tearDown()
 
     @parameterized.expand([
-        ("패딩", 20),
+        ("패딩", 1),
         # ("크롬하츠", 1),
         # ("지갑", 3),
         # ("조던", 4)
     ])
-    def test_collect(self, test_keyword: str, extract_number: int):
+    def test_collect(self, test_keyword: str, number: int):
         try:
             self.open(f"https://kream.co.kr/search?keyword={test_keyword}")
             collected_indices = set()  # 수집한 인덱스 추적
 
-            for i in range(extract_number):
-                product_selector = f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]'
-                next_prodcut_selector = f'div.search_result_list div.search_result_item.product[data-result-index="{i+1}"]'
-                
-                # 이미 수집한 인덱스면 스킵
-                if i in collected_indices:
-                    print(f"인덱스 {i}는 이미 수집되었습니다. 건너뜁니다.")
-                    continue
-                
-                # 스크롤 횟수 카운터 초기화
-                scroll_count = 0
-                
-                while not self.is_element_visible(product_selector):
-                    if self.is_element_visible(next_prodcut_selector):
-                        product_selector = next_prodcut_selector
-                        break
-                    
-                    # 스크롤 5회 이상이면 탈출
-                    if scroll_count >= 3:
-                        print(f"인덱스 {i}의 상품을 찾기 위해 {scroll_count}회 스크롤했지만 찾지 못했습니다. 다음 상품으로 넘어갑니다.")
-                        break
-                        
-                    self.execute_script("window.scrollBy(0, 100);")
-                    scroll_count += 1
-                    self.sleep(0.5)
-                    
-
-                self.click(product_selector)
-                self.sleep(0.5)
-
-                name = self.get_text("div.main-title-container p.sub-title")
-                url = self.get_current_url()
-                if self.is_element_visible('div.product_figure_wrap.lg span.title-txt'):
-                    option = self.get_text('div.product_figure_wrap.lg span.title-txt')
-                else:
-                    option = None
-                ipp = int(
-                    re.sub(r'[^\d]', '', self.get_text('div.price-text-container p.text-lookup.price.display_paragraph')))
-                ssp_elements = self.find_elements('div.btn_wrap div.price em')
-                ssp = int(re.sub(r'[^\d]', '', ssp_elements[1].text))
-                texts_element = self.get_text('div.product_info_wrap dl.detail-product-container')
-                info = get_info(texts_element)
-                product = Product(name, url, option, ipp, ssp, info)
-                self.excel.add_product(product)
-                self.go_back()
+            self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{number}"]')
+            ## Size 옵션 클릭하기
+            ## 로그인과정이 필요함
+            if self.is_element_present('div.product_figure_wrap.md'):
+                self.click('div.button-container a.btn_size')
+                self.is_element_present('div.modal-layer div.content.layer-detail-size-select-content')
+                size_option = self.get_text('div.modal-layer div.content.layer-detail-size-select-content')
+                print(size_option)
+            else:
+                self.click('div.button-container a.btn_size')
+                self.is_element_present('div.modal-layer div.content.layer-detail-size-select-content')
+                size_option = self.get_text('div.modal-layer div.content.layer-detail-size-select-content')
+                print(size_option)
+            # name = self.get_text("div.main-title-container p.sub-title")
+            # url = self.get_current_url()
+            # if self.is_element_visible('div.product_figure_wrap.lg span.title-txt'):
+            #     option = self.get_text('div.product_figure_wrap.lg span.title-txt')
+            # else:
+            #     option = None
+            # ipp = int(
+            #     re.sub(r'[^\d]', '', self.get_text('div.price-text-container p.text-lookup.price.display_paragraph')))
+            # ssp_elements = self.find_elements('div.btn_wrap div.price em')
+            # ssp = int(re.sub(r'[^\d]', '', ssp_elements[1].text))
+            # texts_element = self.get_text('div.product_info_wrap dl.detail-product-container')
+            # info = get_info(texts_element)
+            # product = Product(name, url, option, ipp, ssp, info)
+            # self.excel.add_product(product)
             pause_while()
         
         except Exception as e:
