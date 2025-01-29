@@ -65,3 +65,4 @@ class Excel:
             self.ws.column_dimensions[column_letter].width = adjusted_width
 
 
+## 입력데이터의 특정입력값을 기준으로 데이터를 추출해야합니다
