@@ -1,5 +1,5 @@
-from utils.data_manager import DataManager
 
+from src.utils.scrape import Scrape 
 def input_login():
     email = input("이메일을 입력하세요 : ")
     password = input("비밀번호를 입력하세요 : ")
@@ -7,7 +7,7 @@ def input_login():
         
 ## TODO: 필터 세부 모두 선택 넣기
 def input_filter():
-        data_manager = DataManager()
+        data_manager = Scrape.DataManager()
         filters = {
             "category": "",
             "category_detail": "",
