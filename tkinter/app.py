@@ -277,6 +277,8 @@ class App:
             )
             thread.daemon = True
             thread.start()
+            print(login_info.get('id'))
+            print(login_info.get('password'))
             
         except Exception as e:
             self.progress_label['text'] = f"오류 발생: {str(e)}"

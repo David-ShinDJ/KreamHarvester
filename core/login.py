@@ -1,6 +1,6 @@
-from utils import *
+
 from seleniumbase import SB
-from utils.pause import pause_while
+from src.utils.pause import pause_while
 
 class Login:
     def __init__(self, sb):

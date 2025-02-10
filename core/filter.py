@@ -1,5 +1,5 @@
-from utils.data_manager import DataManager
-from utils.pause import pause_while
+
+from src.utils.pause import pause_while
 
 class Filter:
     def __init__(self, sb):
