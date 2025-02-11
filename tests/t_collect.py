@@ -3,7 +3,6 @@ from parameterized import parameterized
 from src.utils.pause import pause_while
 from src.models.product import Product, ProductInfo
 from src.utils.excel import Excel
-import time, re, os
 
 ## 추출한 데이터 다시 정의하기
 
@@ -34,12 +33,17 @@ class Collect(BaseCase):
     ])
     def test_collect(self, test_keyword: str, number: int):
         try:
-            self.open(f"https://kream.co.kr/search?keyword={test_keyword}")
-            collected_indices = set()  # 수집한 인덱스 추적
-
+            self.open("https://kream.co.kr/login")
+            self.type('input[type="email"]', "ehdwnsqkqhek@naver.com")
+            self.type('input[type="password"]', "Tls1169511!")
+            self.click('button[type="submit"]')
+            self.sleep(1)
+            self.click("button.btn_search")
+            ## 검색 및 Press Enter
+            self.type('input[type="text"]', test_keyword + "\n")
+            self.sleep(1)
             self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{number}"]')
-            ## Size 옵션 클릭하기
-            ## 로그인과정이 필요함
+            ## 모든 사이즈 옵션이 활성화된경우 클릭하기
             if self.is_element_present('div.product_figure_wrap.md'):
                 self.click('div.button-container a.btn_size')
                 self.is_element_present('div.modal-layer div.content.layer-detail-size-select-content')
@@ -50,6 +54,7 @@ class Collect(BaseCase):
                 self.is_element_present('div.modal-layer div.content.layer-detail-size-select-content')
                 size_option = self.get_text('div.modal-layer div.content.layer-detail-size-select-content')
                 print(size_option)
+            pause_while()
             # name = self.get_text("div.main-title-container p.sub-title")
             # url = self.get_current_url()
             # if self.is_element_visible('div.product_figure_wrap.lg span.title-txt'):

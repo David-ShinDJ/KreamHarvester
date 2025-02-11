@@ -10,7 +10,7 @@ class Excel:
         self.current_row = 1
         
         # 엑셀 저장 경로 설정
-        self.excel_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "excels")
+        self.excel_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
         self.excel_path = os.path.join(self.excel_dir, "extract.xlsx")
         
         # excels 디렉토리가 없으면 생성

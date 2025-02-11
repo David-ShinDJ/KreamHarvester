@@ -106,7 +106,6 @@ class Collector():
             else:
                 self.sb.click('div.content-container button.sorting_title')
                 self.sb.click('li.sorting_item p:contains("%s")' % filters['sorting'])
-            pause_while()
 
         except Exception as e:  
             print(f"필터 실패: {e}")
