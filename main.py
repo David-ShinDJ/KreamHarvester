@@ -1,5 +1,6 @@
 from src.crawler.collector import Collector
 from seleniumbase import SB
+from src.utils.pause import pause_while
 # with 구문으로 SB 인스턴스 생성
         #    ("아우터", "패딩", "남성", "블랙", "혜택", "모두 선택", "N", "Nike", "Luxury", "의류", "XL", "30-50만원", "남성 인기순"),
         #     ("신발", "스니커즈", "여성", "아이보리", "할인율", "30% 이하", "T", "Tabi", "Contemporary", "신발", "240", "20만원대", "여성 인기순"),
@@ -47,3 +48,4 @@ with SB() as sb:
     # login_module.perform_login(email=email, password=password)
     # sb.sleep(3)
 
+print("메인 실행")
