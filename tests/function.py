@@ -89,53 +89,88 @@ class TestFunction(BaseCase):
     #     except Exception as e:
     #         print(f"제품 검색 테스트 실패: {e}")
 
-    @parameterized.expand([
-        ("https://kream.co.kr/search?keyword=지갑", 10),
-        ("https://kream.co.kr/search?keyword=에어포스", 30),    
-        ("https://kream.co.kr/search?keyword=패딩", 50),
+    # @parameterized.expand([
+    #     ("https://kream.co.kr/search?keyword=지갑", 10),
+    #     ("https://kream.co.kr/search?keyword=에어포스", 30),    
+    #     ("https://kream.co.kr/search?keyword=패딩", 50),
 
-    ])# 1초 대기 후 재시도
+    # ])# 1초 대기 후 재시도
 
     ## TODO: index 50이상시 스크롤 기능 , 페이지가 완전 로드되기전에 back 한경우 data; 이상한페이지로드됨, 네트워크속도,오류발생시 프로그램이 멈춤
     ## TODO: self.wait 페이지로드시 필요한 함수, self.sleep 스크립트작업을 아예끄는방식 모든 작업이 끝날떄 sleepp 사용해야함
-    def test_extract_products(self, url, number_of_products):
-        retry_count = 0
-        max_retries = 3
+    # def test_extract_products(self, url, number_of_products):
+    #     retry_count = 0
+    #     max_retries = 3
 
-        while retry_count < max_retries:
-            try:
-                self.open(url)
-                for i in range(0, number_of_products):
-                    self.wait(1)
-                    if self.is_element_present(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]'):
-                        self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]')
-                        self.wait(1)
-                        self.go_back()
-                    else:
-                        self.scroll_to(f'div.search_result_list div.search_result_item.product[data-result-index="{i+1}"]')
-                        if self.is_element_present(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]'):
-                            self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]')
-                            self.wait(1)
-                            self.go_back()
-                    self.wait(1)
+    #     while retry_count < max_retries:
+    #         try:
+    #             self.open(url)
+    #             for i in range(0, number_of_products):
+    #                 self.wait(1)
+    #                 if self.is_element_present(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]'):
+    #                     self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]')
+    #                     self.wait(1)
+    #                     self.go_back()
+    #                 else:
+    #                     self.scroll_to(f'div.search_result_list div.search_result_item.product[data-result-index="{i+1}"]')
+    #                     if self.is_element_present(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]'):
+    #                         self.click(f'div.search_result_list div.search_result_item.product[data-result-index="{i}"]')
+    #                         self.wait(1)
+    #                         self.go_back()
+    #                 self.wait(1)
                 
-                return 
-            except Exception as e:
-                print(f"제품 추출 테스트 실패: {e}")
-                retry_count += 1
-                self.sleep(1)
-            finally:
-                print(f'{retry_count}회 실행중')
-    ## TODO: Product Info Write 하기
+    #             return 
+    #         except Exception as e:
+    #             print(f"제품 추출 테스트 실패: {e}")
+    #             retry_count += 1
+    #             self.sleep(1)
+    #         finally:
+    #             print(f'{retry_count}회 실행중')
+    # ## TODO: Product Info Write 하기
+    # ## 사이즈 보편화 ["L", "M", "260", "265", "270", "230", "235", "240"]
     @parameterized.expand([
-        ("https://kream.co.kr/search?keyword=지갑", 10),
-        ("https://kream.co.kr/search?keyword=에어포스", 30),    
-        ("https://kream.co.kr/search?keyword=패딩", 50),
-
+        # ("https://kream.co.kr/products/430299", ["230", "235", "240","260", "265", "270"]),
+        ("https://kream.co.kr/products/235976",["S", "M", "L", "XL", "XXL"]),
+        # ("https://kream.co.kr/products/83946", "사이즈옵션없음")
     ])#
-    def test_write_product_excel(self):
-        pass
-
+    ## TODO: 크림사이트에서 보여지는 텍스트 "L" 인식이 되지않는 이슈있음 --> tag 를 구체화하니까 해결됌
+    def test_click_size(self, url, size_options):
+        try:
+            ## 로그인 진행
+            self.open("https://kream.co.kr/login")
+            self.type('input[type="email"]', "ehdwnsqkqhek@naver.com")
+            self.type('input[type="password"]', "Tls1169511!")
+            self.click('button[type="submit"]')
+            self.wait(1)
+            self.open(url)
+            if size_options == "사이즈옵션없음":
+                print("데이터추출완료")
+                return
+            else:
+                self.click('span.title-txt:contains("모든 사이즈")')
+                if self.is_element_present('div.layout-grid-horizontal-equal.select_list.grid_list.grid_3'):
+                    size_option = self.get_text('div.layout-grid-horizontal-equal.select_list.grid_list.grid_3')
+                    option_list = size_option.split("\n")
+                    common_sizes = [size for size in size_options if size in option_list]
+                    for size in common_sizes:
+                        self.click(f'div.text_body.option1 p.text-lookup:contains("{size}")')
+                        self.click(f'span.title-txt:contains("{size}")')
+        except Exception as e:
+            print(f"테스트 실행 중 오류 발생: {str(e)}")
 
 if __name__ == "__main__":
-    pytest.main(['tests/function.py', '-v', '-s']) # 테스트 파일 경로 지정
+    pytest.main(['tests/function.py','-s', '-v']) # 테스트 파일 경로 지정
+
+
+## pytest options
+# -v  # Verbose mode. Prints the full name of each test and shows more details.
+# -q  # Quiet mode. Print fewer details in the console output when running tests.
+# -x  # Stop running the tests after the first failure is reached.
+# --html=report.html  # Creates a detailed pytest-html report after tests finish.
+# --co | --collect-only  # Show what tests would get run. (Without running them)
+# --co -q  # (Both options together!) - Do a dry run with full test names shown.
+# -n=NUM  # Multithread the tests using that many threads. (Speed up test runs!)
+# -s  # See print statements. (Should be on by default with pytest.ini present.)
+# --junit-xml=report.xml  # Creates a junit-xml report after tests finish.
+# --pdb  # If a test fails, enter Post Mortem Debug Mode. (Don't use with CI!)
+# --trace  # Enter Debug Mode at the beginning of each test. (Don't use with CI!)
