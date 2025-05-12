@@ -1,1 +1,1 @@
-from .pause import pause_while
+from .pause import pause, pause_time

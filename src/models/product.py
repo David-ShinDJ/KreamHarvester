@@ -1,27 +1,69 @@
-class ProductInfo:
-    def __init__(self, rtp, rpc, rp, mn, rd, rc):
-        self.rtp = rtp  # 최근거래가
-        self.rpc = rpc  # 최근가격변동
-        self.rp = rp    # 발매가
-        self.mn = mn    # 모델번호
-        self.rd = rd    # 출시일
-        self.rc = rc    # 대표색상
-
-    def __str__(self):
-        return f"ProductInfo(rtp={self.rtp}, rpc={self.rpc}, rp={self.rp}, mn={self.mn}, rd={self.rd}, rc={self.rc})"
-    
 
 class Product:
-    def __init__(self, name:str, url:str, option:str | None, ipp:int, ssp:int, info:ProductInfo):
+    def __init__(self, 
+                 name: str = None,                    # 제품_이름
+                 url: str = None,                      # 제품_URL
+                 product_id: str = None,               # 제품_id
+                 category: str = None,                 # 제품_카테고리
+                 brand: str = None,                    # 브랜드
+                 model_number: str = None,             # 제품_품번
+                 immediate_buy_price: int = None,      # 즉시구매가격
+                 storage_sell_price: int = None,       # 보관판매가격
+                 immediate_sell_price: int = None,     # 즉시판매가격
+                 total_sales: int = None,              # 총판매량
+                 storage_latest_date: str = None,      # 보판_최근체결날짜
+                 storage_latest_price: int = None,     # 보판_최근체결금액
+                 storage_week_sales: int = None,       # 보판_최근7일체결량
+                 total_latest_date: str = None  ,        # 전체_최근체결날짜
+                 total_latest_price: int = None ,       # 전체_최근체결금액
+                 total_week_sales: int = None,         # 전체_최근7일체결량
+                 option_name: str = None):      # 옵션명
+        # 제품 식별 정보
         self.name = name
         self.url = url
-        self.option = option  # option 변수 할당이 누락되어 있었음
-        self.ipp = ipp
-        self.ssp = ssp
-        self.m = self.ssp - self.ipp
-        self.mr = format((self.ssp - self.ipp) / self.ssp, ".2f")  # 수식 괄호 수정
-        self.info = info
+        self.product_id = product_id
+        self.category = category
+        self.brand = brand
+        self.model_number = model_number
         
+        # 가격 정보
+        self.immediate_buy_price = immediate_buy_price
+        self.storage_sell_price = storage_sell_price
+        self.immediate_sell_price = immediate_sell_price
+        
+        # 판매 정보
+        self.total_sales = total_sales
+        self.storage_latest_date = storage_latest_date
+        self.storage_latest_price = storage_latest_price
+        self.storage_week_sales = storage_week_sales
+        self.total_latest_date = total_latest_date
+        self.total_latest_price = total_latest_price
+        self.total_week_sales = total_week_sales
+        
+        # 옵션 정보
+        self.option_name = option_name
+        
+        # 계산된 속성
+        if self.storage_sell_price and self.immediate_buy_price:
+            self.storage_margin = self.storage_sell_price - self.immediate_buy_price
+            self.immediate_margin = self.immediate_sell_price - self.immediate_buy_price
+            self.storage_margin_rate = format(self.storage_margin / self.storage_sell_price, ".2f")
+            self.immediate_margin_rate = format(self.immediate_margin / self.immediate_sell_price, ".2f")
+    
     def __str__(self):
-        return f"Product(name={self.name}, url={self.url}, option={self.option}, ipp={self.ipp}, ssp={self.ssp}, m={self.m}, mr={self.mr}, info={self.info})"
+        return (f"Product(name='{self.name}', "
+                f"url='{self.url}', "
+                f"product_id='{self.product_id}', "
+                f"category='{self.category}', "
+                f"brand='{self.brand}', "
+                f"model_number='{self.model_number}', "
+                f"immediate_buy_price={self.immediate_buy_price}, "
+                f"storage_sell_price={self.storage_sell_price}, "
+                f"immediate_sell_price={self.immediate_sell_price}, "
+                f"total_sales={self.total_sales}, "
+                f"storage_margin={self.storage_margin}, "
+                f"immediate_margin={self.immediate_margin}, "
+                f"storage_margin_rate={self.storage_margin_rate}, "
+                f"immediate_margin_rate={self.immediate_margin_rate}, "
+                f"option_name='{self.option_name}')")
     

@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: kreamharvester
+Version: 0.1
+Requires-Dist: seleniumbase
+Requires-Dist: parameterized
+Requires-Dist: pytest
