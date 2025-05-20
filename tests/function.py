@@ -1,28 +1,20 @@
-## 크롤링에서 자주사용하는 SeleniumBase 함수선언하기
-from seleniumbase import BaseCase
-from parameterized import parameterized
+## 유닛함수및 테스트케이스 작성 
 import pytest
-from src.models.filter import Filter
-from src.models.product import Product
-from src.utils.pause import pause
-from src.models.pointer import Pointer
+from seleniumbase import BaseCase
+from src.models.thumb import Thumbnail
+from parameterized import parameterized
 ## FIXME: 이슈모음
 ## 1. typing 인식안돼는 이슈 존재
         # self.click("button.btn_search.header-search-button.search-button-margin")
          # ## typing 인식안돼는 이슈 존재
         # self.type('input[type="text"]', "조던 + \n")
-## 2. 크림사이트에서 보여지는 텍스트 "L" 인식이 되지않는 이슈있음 --> tag 를 구체화하니까 해결됌
-        # def test_click_size(self, url, size_options):
-        #     try:
-        #         ## 로그인 진행
-        #         self.open("https://kream.co.kr/login")
-        #         self.type('input[type="email"]', "ehdwnsqkqhek@naver.com")
-        #         self.type('input[type="password"]', "Tls1169511!")
-## 3. data; 페이지가 로드되는경우 잘못된요소를 클릭하거나 이동하면발생함 
-    # self.wait 페이지로드시 필요한 함수, self.sleep 스크립트작업을 아예끄는방식 모든 작업이 끝날떄 sleepp 사용해야함
+## 3. data; 페이지가 로드되는경우 잘못된요소를 클릭하거나 이동하면발생함 없는요소를 클릭하는 함수실행시 발생함
+    # self.wait 페이지로드시 사용하여 방지 , self.sleep는 스크립트작업을 아예끄는방식으로 모든 작업이 끝날떄 사용필요
 ## 4. 단어의 띄어쓰기있는경우 
     #self.click('li.sorting_item p:contains("%s")' % test_sorting) %s 문법사용해야함
+    ## 인덱스 늘어나는 범위 0~51 52~101 102~151 152~201 202~251 252~301
 class TestFunction(BaseCase):
+
     def setUp(self):
         super().setUp()
         # 추가 초기화가 필요한 경우 여기에 작성
@@ -124,77 +116,52 @@ class TestFunction(BaseCase):
     #             self.go_back()
     #     except Exception as e:
     #         print(f"테스트 실행 중 오류 발생: {str(e)}")
-    ## 인덱스 늘어나는 범위 0~51 52~101 102~151 152~201 202~251 252~301
-    @parameterized.expand([49, 51, 99, 101, 151, 199, 201])
-    def test_scroll_down(self, index: int):
-        quotient = index // 50 + 1
-        self.open("https://kream.co.kr/search")
-        for i in range(quotient):
-            self.scroll_to_bottom()
-            self.wait(1)
-            self.slow_scroll_to_element(f'div[data-result-index="{i*50}"]')
-            if i == quotient - 1:
-                self.scroll_to_element(f'div[data-result-index="{index}"]')
-        print(f"index: {index}, quotient: {quotient}")
-        pause()
+    # @parameterized.expand([49, 51, 99, 101, 151, 199, 201])
+    # def test_scroll_down(self, index: int):
+    #     quotient = index // 50 + 1
+    #     self.open("https://kream.co.kr/search")
+    #     for i in range(quotient):
+    #         self.scroll_to_bottom()
+    #         self.wait(1)
+    #         self.slow_scroll_to_element(f'div[data-result-index="{i*50}"]')
+    #         if i == quotient - 1:
+    #             self.scroll_to_element(f'div[data-result-index="{index}"]')
+    #     print(f"index: {index}, quotient: {quotient}")
     # @parameterized.expand([1, 49, 51, 99, 101, 199, 201])
-
     # def test_click_product_index(self, index: int):
-    #     """ 제품 검색 및 클릭 """
+    #     quotient = index // 50 + 1
     #     try:
     #         self.open("https://kream.co.kr/search")
+    #         for i in range(quotient):
+    #             self.scroll_to_bottom()
+    #             self.wait(1)
+    #             self.slow_scroll_to_element(f'div[data-result-index="{i*50}"]')
+    #             if i == quotient - 1:
+    #                 self.scroll_to_element(f'div[data-result-index="{index}"]')
     #         self.click(f'div[data-result-index="{index}"].search_result_item.product')
-            
+    #         pause()
     #     except Exception as e:
     #         print(f"제품 클릭실패: {e}")
-
-#     @parameterized.expand([
-#     # ("https://kream.co.kr/search?keyword=지갑", 10),
-#     # ("https://kream.co.kr/search?keyword=에어포스", 20),
-#     ("https://kream.co.kr/search?keyword=오버핏티셔츠", 50),
-#     ])
-#     ## FIXME: data; 페이지 팅기는 이슈 1. wait 안돼고 바로 로드되는경우, 없는 요소를 클릭하는경우
-# ## click 이동하는경우 index 넘버가 변경되는 banner 관련상품추천이 index 넘버로 새롭게 지정되ㅓㅁ
-#     def test_extract_products(self, keyword_url, numbers):
-#         self.open(keyword_url)
-#         i = 0
-#         while i < numbers:
-#             try:
-#                 # 실제 상품 요소만 찾기
-#                 products = self.find_elements('div.search_result_item.product')
-#                 if i >= len(products):
-#                     print(f"더 이상 상품이 없습니다. 현재 인덱스: {i}")
-#                     break
-                    
-#                 # i번째 상품 클릭
-#                 products[i].click()
-#                 self.wait(1)
-#                 print(self.get_current_url())
-#                 self.go_back()
-#                 self.wait(1)
-#                 i += 1  # 성공했을 때만 i 증가
-#             except Exception as e:
-#                 print(f"오류발생 {str(e)}")
-#                 i += 1  # 오류가 발생해도 i를 증가시켜서 다음 인덱스로 넘어감
-    
-# ## TODO: 추출기에서 필요한 정보만 추출하기 필요데이터선정하기 -> 프로덕트 인포를 어떻게 가겨올지 생각하기 프러덕트클릭하는 이미지카드안에 대략적인 정보가 담겨있음 
-# ## TODO: 의미있는 데이터만 추출해서 사용하기
-#     def test_extract_product_info(self):
-#         """ 제품 검색 및 클릭 """
-#         try:
-#             self.open("https://kream.co.kr/search")
-#             text = self.get_text(f'div[data-result-index="{pointer.index}"]')
-#             text_list = text.split("\n")# 디버깅용 출력
-#             pointer.product_trade_volume = text_list[0].replace("거래 ", "")  # "거래 1.3만" -> "1.3만"
-#             pointer.product_brand = text_list[1]  # "Asics"
-#             pointer.product_name = text_list[3]   # "아식스 젤 소노마 15-50 블랙"
-#             pointer.product_immediate_buy_price_average = text_list[5].replace("원", "").replace(",", "")  # "145,000원" -> "145000"
-#             pointer.product_likes = text_list[7]  # "3.2만"
-#             pointer.product_reviews = text_list[8]  # "236"
-#         except Exception as e:
-#             print(f"제품 검색 테스트 실패: {e}")
-#         finally:
-#             print(f"포인터 정보: {pointer}")
+    @parameterized.expand([
+        1
+    ])
+    def test_extract_thumbnail_info(self, index: int,):
+        """ 제품 검색 및 클릭 """
+        try:
+            self.open("https://kream.co.kr/search")
+            thumbnail_info = Thumbnail(index=index)
+            text = self.get_text(f'div[data-result-index="{index}"]')
+            text_list = text.split("\n")# 디버깅용 출력
+            thumbnail_info.trade_volume = text_list[0].replace("거래 ", "")  # "거래 1.3만" -> "1.3만"
+            thumbnail_info.brand = text_list[1]  # "Asics"
+            thumbnail_info.name = text_list[3]   # "아식스 젤 소노마 15-50 블랙"
+            thumbnail_info.lowest_immediate_buy_price = text_list[5].replace("원", "").replace(",", "")  # "145,000원" -> "145000"
+            thumbnail_info.likes = text_list[7]  # "3.2만"
+            thumbnail_info.reviews = text_list[8]  # "236"
+        except Exception as e:
+            print(f"제품 검색 테스트 실패: {e}")
+        finally:
+            print(f"포인터 정보: {thumbnail_info}")
 
 ## product 추출 데이터
                 #  name: str,                    # 제품_이름
