@@ -1,7 +1,7 @@
 ## 유닛함수및 테스트케이스 작성 
 import pytest
 from seleniumbase import BaseCase
-from src.models.thumb import Thumbnail
+from src.models.product import Product
 from parameterized import parameterized
 ## FIXME: 이슈모음
 ## 1. typing 인식안돼는 이슈 존재
@@ -142,73 +142,54 @@ class TestFunction(BaseCase):
     #         pause()
     #     except Exception as e:
     #         print(f"제품 클릭실패: {e}")
+## product 추출 데이터
+            # index: int,                           # 인덱스
+            # trade_volume: str = None,             # 거래량
+            # brand : str = None,                  # 브랜드
+            # name : str = None,                   # 상품명
+            # lowest_immediate_buy_price : int = None, # 최저 즉시 구매가# 최고 즉시 구매가
+            # likes : int = None,                  # 관심
+            # reviews : int = None,                # 리뷰
+            # url: str = None,                      # url
+            # review_point: str = None,             # 별점
+            # size: str = None,                     # 사이즈
+            # immediate_buy_price: int = None,      # 즉시구매가격
+            # immediate_sell_price: int = None,     # 즉시판매가격
+            # early_delivery_price: int = None,     # 빠른배송가격
+            # early_delivery_nf_price: int = None,  # 빠른배송95가격
+            # recent_trade_price: int = None,       # 최근거래가
+            # release_price: int = None,            # 발매가
+            # model_number: str = None,             # 모델번호   
+            # release_date: str = None,             # 출시일
+            # representative_color: str = None,     # 대표색상
+            # recent_7_day_sales_5: int = None,      # 최근 7일 체결량 top5
+            # sales_bid_5: int = None,              # 판매입찰 top5
+
     @parameterized.expand([
         1
-    ])
-    def test_extract_thumbnail_info(self, index: int,):
-        """ 제품 검색 및 클릭 """
+            ])
+    def test_click_harvest(self, index: int):
         try:
+            product_info = Product(index=index)
             self.open("https://kream.co.kr/search")
-            thumbnail_info = Thumbnail(index=index)
-            text = self.get_text(f'div[data-result-index="{index}"]')
-            text_list = text.split("\n")# 디버깅용 출력
-            thumbnail_info.trade_volume = text_list[0].replace("거래 ", "")  # "거래 1.3만" -> "1.3만"
-            thumbnail_info.brand = text_list[1]  # "Asics"
-            thumbnail_info.name = text_list[3]   # "아식스 젤 소노마 15-50 블랙"
-            thumbnail_info.lowest_immediate_buy_price = text_list[5].replace("원", "").replace(",", "")  # "145,000원" -> "145000"
-            thumbnail_info.likes = text_list[7]  # "3.2만"
-            thumbnail_info.reviews = text_list[8]  # "236"
+            self.click(f'div[data-result-index="{index}"]')
+            text = self.get_text('div.content')
+            text_list = text.split("\n")
+            print(text_list)
+            product_info.trade_volume = text_list[0].replace("거래 ", "")
+            product_info.brand = text_list[1]
+            product_info.name = text_list[2]
+            product_info.ko_name = text_list[3]
+            product_info.lowest_immediate_buy_price = text_list[5].replace("원", "").replace(",", "")
+            product_info.likes = text_list[6].replace("관심 ", "")
+            product_info.reviews = text_list[8].replace("리뷰 ", "")
+            product_info.url = self.get_current_url()
+            ## product 전체 text 가져와서 분류하기
+            product_info.review_point = self.get_attribute('div.rating-container p.rating', 'textContent')
         except Exception as e:
-            print(f"제품 검색 테스트 실패: {e}")
+            print(f"테스트 실행 중 오류 발생: {str(e)}")
         finally:
-            print(f"포인터 정보: {thumbnail_info}")
-
-## product 추출 데이터
-                #  name: str,                    # 제품_이름
-                #  url: str,                      # 제품_URL
-                #  product_id: str,               # 제품_id
-                #  category: str,                 # 제품_카테고리
-                #  brand: str,                    # 브랜드
-                #  model_number: str,             # 제품_품번
-                #  immediate_buy_price: int,      # 즉시구매가격
-                #  storage_sell_price: int,       # 보관판매가격
-                #  immediate_sell_price: int,     # 즉시판매가격
-                #  total_sales: int,              # 총판매량
-                #  storage_latest_date: str,      # 보판_최근체결날짜
-                #  storage_latest_price: int,     # 보판_최근체결금액
-                #  storage_week_sales: int,       # 보판_최근7일체결량
-                #  total_latest_date: str,        # 전체_최근체결날짜
-                #  total_latest_price: int,       # 전체_최근체결금액
-                #  total_week_sales: int,         # 전체_최근7일체결량
-                #  option_name: str = None):  
-
-    # @parameterized.expand([(
-    #         Product(url="https://kream.co.kr/products/430299"),
-    #         (Filter(category1="신발", category2="스니커즈", 
-    #             keyword="조던", sort_by="남성 인기순", min_margin=10,
-    #             exclude_storage=True, exclude_release_above=False, 
-    #             exclude_no_release=False, min_total_sales=5, min_period_sales=5,
-    #             min_immediate_price=200000, max_immediate_price=1000000, size_options="260,265,270")
-    #             )
-    #             ),
-    #         ])
-    # def test_click_harvest(self, product: Product, filter: Filter):
-    #     try:
-    #         ## 로그인 진행
-    #         self.open("https://kream.co.kr/login")
-    #         self.type('input[type="email"]', "ehdwnsqkqhek@naver.com")
-    #         self.type('input[type="password"]', "Tls1169511!")
-    #         self.click('button[type="submit"]')
-    #         self.wait(1)
-    #         self.open(product.url)
-    #         product.name = self.get_text('main-title-container p.title')
-    #         product.url = self.get_current_url()
-    #         product.product_id = url.split("/")[-1]
-    #         product.category = filter.category1 + "/" + filter.category2
-    #         product.brand
-
-    #     except Exception as e:
-    #         print(f"테스트 실행 중 오류 발생: {str(e)}")
+            print(f"상품 정보: {product_info}")
 
 
 if __name__ == "__main__":
@@ -223,3 +204,4 @@ if __name__ == "__main__":
 # --junit-xml=report.xml  # Creates a junit-xml report after tests finish.
 # --pdb  # If a test fails, enter Post Mortem Debug Mode. (Don't use with CI!)
 # --trace  # Enter Debug Mode at the beginning of each test. (Don't use with CI!)
+
